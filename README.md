@@ -116,3 +116,39 @@ TITLE={제목}
    ```
 
 3. http://localhost:8080/api/slack/weather API를 POST로 호출합니다.
+
+### NAS Synology 실행
+
+1. Container Manager, Web Station을 설치합니다.
+2. Container Manager 실행 후, 컨테이너 > 생성 버튼을 선택합니다.
+3. 이미지 선택란에서 이미지 추가를 선택합니다.
+4. `sotaneum/k-weather-alert` 까지만 검색해서 `sotaneum/k-weather-alert`을 선택 후 다운로드 버튼을 누릅니다.
+5. 컨테이너 이름을 `k-weather-alert`으로 설정합니다.
+6. 자동 재시작 활성화를 체크하고 Web Station을 통한 웹 포털 설정을 체크합니다.
+7. 8080 / HTTP 로 지정하고 다음을 누릅니다.
+8. 환경 부분에 다음과 같은 내용을 본인에 맞게 추가합니다.
+   ```
+   API_KEY=...
+   SLACK_CHANNEL_ID=...
+   SLACK_HOOK_URL=...
+   PERIOD_DAYS=14
+   ICONS=🟡,⚠️,🚨
+   DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요!
+   FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개
+   TITLE=📢 생존 일기 📢
+   ```
+9. 실행 명령 부분에 명령에 `node index.js`를 입력 후 다음을 선택합니다.
+10. 포털 만들기 마법사 > 웹 서비스 포털 설정이 표시됩니다.
+11. 포털 유형을 포트 기반으로 설정합니다.
+12. HTTP를 마음대로 설정하고 생성 버튼을 누릅니다.
+13. {nas url}:{설정한 포트} 로 진입시, hi가 뜨는 지 확인하세요.
+14. 제어판에 진입 후 작업 스케줄러에 진입합니다.
+15. 생성 버튼을 클릭하고 주기적으로 호출 예정이라면 스케줄을 추가합니다.
+16. 작업 설정 탭에서 아래와 같이 설정합니다.
+
+    ```bash
+    #!/bin/bash
+
+    # 예시: API에 POST 요청 보내기
+    curl -X POST http://{nas-url}:{설정한 포트}/api/slack/weather
+    ```
