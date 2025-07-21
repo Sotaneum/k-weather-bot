@@ -47,25 +47,25 @@ TITLE={제목}
 
 - `PERIOD_DAYS` : 데이터 참고 기간 (기본값 : 14일)
 - `ICONS` : 기상 특보 아이콘 (기본값 : [])
-    - 예비특보, 주의보, 경보 순서대로 입력하세요.
+  - 예비특보, 주의보, 경보 순서대로 입력하세요.
 - `DESCS` : 기상 특보 설명 (기본값 : [])
-    - 예비특보, 주의보, 경보 순서대로 입력하세요.
+  - 예비특보, 주의보, 경보 순서대로 입력하세요.
 - `FILTERED_WRN` : 필터링 기상 특보 (기본값 : [])
   - 입력하지 않으면 모두 표시합니다.
   - 입력하는 경우 입력한 항목만 표시합니다.
     - 지원 기상 특보 : `강풍`, `호우`, `한파`, `건조`, `해일`, `지진해일`, `풍랑`, `태풍`, `대설`, `황사`, `폭염`, `안개`
 - `TITLE` : 제목 (기본값 : `📢 기상 특보 안내`)
-
-```
-API_KEY=...
-SLACK_CHANNEL_ID=...
-SLACK_HOOK_URL=...
-PERIOD_DAYS=14
-ICONS=🟡,⚠️,🚨
-DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요!
-FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개
-TITLE=📢 생존 일기 📢
-```
+- 예시
+  ```
+  API_KEY=...
+  SLACK_CHANNEL_ID=...
+  SLACK_HOOK_URL=...
+  PERIOD_DAYS=14
+  ICONS=🟡,⚠️,🚨
+  DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요!
+  FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개
+  TITLE=📢 생존 일기 📢
+  ```
 
 ## 실행 방법
 
@@ -73,23 +73,23 @@ TITLE=📢 생존 일기 📢
 
 1. 이전 단계에서 생성한 환경 변수를 .env 파일을 생성하고 내용을 넣습니다.
 
-```
-# ./.env
-API_KEY=...
-SLACK_CHANNEL_ID=...
-SLACK_HOOK_URL=...
-PERIOD_DAYS=14
-ICONS=🟡,⚠️,🚨
-DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요!
-FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개
-TITLE=📢 생존 일기 📢
-```
+   ```
+   # ./.env
+   API_KEY=...
+   SLACK_CHANNEL_ID=...
+   SLACK_HOOK_URL=...
+   PERIOD_DAYS=14
+   ICONS=🟡,⚠️,🚨
+   DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요!
+   FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개
+   TITLE=📢 생존 일기 📢
+   ```
 
 2. node로 실행합니다.
 
-```bash
-node index.js
-```
+   ```bash
+   node index.js
+   ```
 
 3. http://localhost:8080/api/slack/weather API를 POST로 호출합니다.
 
@@ -97,22 +97,22 @@ node index.js
 
 1. 이미지를 가져옵니다.
 
-```bash
-docker pull sotaneum/k-weather-alert:latest
-```
+   ```bash
+   docker pull sotaneum/k-weather-alert:latest
+   ```
 
 2. 컨테이너를 실행합니다.
 
-```bash
-docker run -d --name k-weather-alert -p 8080:8080 sotaneum/k-weather-alert:latest \
--e API_KEY=... \
--e SLACK_CHANNEL_ID=... \
--e SLACK_HOOK_URL=... \
--e PERIOD_DAYS=14 \
--e ICONS=🟡,⚠️,🚨 \
--e DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요! \
--e FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개 \
--e TITLE=📢 생존 일기 📢
-```
+   ```bash
+   docker run -d --name k-weather-alert -p 8080:8080 sotaneum/k-weather-alert:latest \
+   -e API_KEY=... \
+   -e SLACK_CHANNEL_ID=... \
+   -e SLACK_HOOK_URL=... \
+   -e PERIOD_DAYS=14 \
+   -e ICONS=🟡,⚠️,🚨 \
+   -e DESCS=→ 아직은 살만 하죠,→ 조금 힘들죠?,→ 조심하세요! \
+   -e FILTERED_WRN=강풍,호우,풍랑,태풍,대설,황사,폭염,안개 \
+   -e TITLE=📢 생존 일기 📢
+   ```
 
 3. http://localhost:8080/api/slack/weather API를 POST로 호출합니다.
