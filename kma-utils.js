@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { WRN_NAME } from "./kma-constants.js";
+import { LVL_NAME, WRN_NAME, CMD_NAME, isTest } from "./kma-constants.js";
 
 config(); // .env 불러오기
 
@@ -8,10 +8,12 @@ export function getConfig() {
   const slackChannelId = process.env.SLACK_CHANNEL_ID;
   const slackHookUrl = process.env.SLACK_HOOK_URL;
 
-  if (!apiKey || !slackChannelId || !slackHookUrl) {
-    throw new Error(
-      "API_KEY, SLACK_CHANNEL_ID and SLACK_HOOK_URL must be set in .env file"
-    );
+  if (!isTest) {
+    if (!apiKey || !slackChannelId || !slackHookUrl) {
+      throw new Error(
+        "API_KEY, SLACK_CHANNEL_ID and SLACK_HOOK_URL must be set in .env file"
+      );
+    }
   }
 
   const periodDays = parseInt(process.env.PERIOD_DAYS, 10) || 14;
@@ -74,12 +76,27 @@ export function toDate(KMAFlat = "") {
   );
 }
 
-function remove(acc, targetId) {
-  Object.keys(acc).forEach((key) => {
-    if (acc[key].includes(targetId)) {
-      acc[key] = acc[key].filter((id) => id !== targetId);
-      if (acc[key].length === 0) {
-        delete acc[key];
+function get(acc, wrn, targetId) {
+  if (!acc[wrn]) {
+    return null;
+  }
+  return Object.entries(acc[wrn]).find(([lvl, value]) =>
+    value.includes(targetId)
+  );
+}
+
+function remove(acc, wrn, targetId) {
+  if (!acc[wrn]) {
+    return acc;
+  }
+  Object.keys(acc[wrn]).forEach((lvl) => {
+    if (acc[wrn][lvl].includes(targetId)) {
+      acc[wrn][lvl] = acc[wrn][lvl].filter((id) => id !== targetId);
+      if (acc[wrn][lvl].length === 0) {
+        delete acc[wrn][lvl];
+      }
+      if (Object.keys(acc[wrn]).length === 0) {
+        delete acc[wrn];
       }
     }
   });
@@ -99,25 +116,36 @@ export function toWeatherGroups(data = [], supportWrn = []) {
       return acc;
     }
 
-    if (CMD === "6" || CMD === "7") {
+    if (CMD === "5") {
       return acc;
     }
 
-    if (CMD === "3" || CMD === "4") {
-      return remove(acc, REG_ID);
+    acc = remove(acc, WRN, REG_ID);
+
+    if (isTest) {
+      console.log(
+        REG_ID,
+        LVL_NAME[LVL],
+        WRN_NAME[WRN],
+        CMD_NAME[CMD],
+        get(acc, WRN, REG_ID)?.[0]
+      );
     }
 
-    if (CMD === "2") {
-      acc = remove(acc, REG_ID);
+    if (CMD === "3" || CMD === "4" || CMD === "7") {
+      return acc;
     }
 
-    const name = `${LVL}_${WRN}`;
-    if (!acc[name]) {
-      acc[name] = [];
+    if (!acc[WRN]) {
+      acc[WRN] = {};
     }
 
-    if (!acc[name].includes(REG_ID)) {
-      acc[name].push(REG_ID);
+    if (!acc[WRN][LVL]) {
+      acc[WRN][LVL] = [];
+    }
+
+    if (!acc[WRN][LVL].includes(REG_ID)) {
+      acc[WRN][LVL].push(REG_ID);
     }
     return acc;
   }, {});

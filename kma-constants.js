@@ -1,3 +1,7 @@
+import { config } from "dotenv";
+
+config();
+
 export const LVL_NAME = ["", "예비특보", "주의보", "경보"];
 export const CMD_NAME = [
   "",
@@ -36,3 +40,5 @@ export const WRN_NAME = {
   폭염: "H",
   안개: "F",
 };
+
+export const isTest = process.env.IS_TEST === "true";

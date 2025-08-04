@@ -4,6 +4,7 @@ import { sendMessage } from "./slack-api.js";
 import { toMessage } from "./utils.js";
 import express from "express";
 import cors from "cors";
+import { isTest } from "./kma-constants.js";
 
 const {
   apiKey,
@@ -28,7 +29,11 @@ async function getWeather() {
 
 async function send(groups, regionNames) {
   const message = toMessage(title, groups, regionNames, icons, descs);
-  sendMessage(slackHookUrl, slackChannelId, message);
+  if (isTest) {
+    console.log(message);
+  } else {
+    sendMessage(slackHookUrl, slackChannelId, message);
+  }
 }
 
 const app = express();

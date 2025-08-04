@@ -7,7 +7,13 @@ export function toMessage(
   iconMap = [],
   descMap = []
 ) {
-  const messages = Object.entries(groups)
+  const newGroups = {};
+  Object.entries(groups).forEach(([wan, group]) => {
+    Object.entries(group).forEach(([lvl, value]) => {
+      newGroups[`${lvl}_${wan}`] = value;
+    });
+  });
+  const messages = Object.entries(newGroups)
     .sort(([keyA], [keyB]) => {
       const [LVLA] = keyA.split("_");
       const [LVLB] = keyB.split("_");
@@ -18,7 +24,10 @@ export function toMessage(
       const icon = iconMap[LVL] ?? "";
       const desc = descMap[LVL] ?? "";
       return `${icon} [${WRN_NAME[WRN]} ${LVL_NAME[LVL]}] ${desc}
-• 지역: ${value.map((code) => regionNames[code].REG_NAME).join(", ")}`;
+• 지역: ${value
+        .map((code) => regionNames[code].REG_NAME)
+        .sort()
+        .join(", ")}`;
     });
   return `${title}
 

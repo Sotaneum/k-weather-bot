@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "IS_TEST=true node index.js",
     "start": "node index.js",
     "deploy": "docker buildx build --platform linux/amd64,linux/arm64 --push -t sotaneum/k-weather-alert:latest ."
   },
