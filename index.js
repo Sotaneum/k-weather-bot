@@ -22,7 +22,9 @@ let regionNamesCache = null;
 async function getWeather() {
   const start = getKSTDate();
   start.setDate(start.getDate() - periodDays);
-  const weatherData = await getWeatherData(apiKey, start, getKSTDate());
+  const end = getKSTDate();
+  end.setDate(end.getDate() + 1);
+  const weatherData = await getWeatherData(apiKey, start, end);
 
   return toWeatherGroups(weatherData, filteredWrn);
 }
